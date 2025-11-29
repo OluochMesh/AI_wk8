@@ -1,0 +1,244 @@
+{
+  "name": "AutoParts AI Agent Simulation (Mock Version)",
+  "nodes": [
+    {
+      "id": "trigger",
+      "name": "Production Start Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+
+    {
+      "id": "qualitySet",
+      "name": "Quality Inspection Agent (Mock)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [350, 150],
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "defectProbability",
+              "value": "={{ Math.random() }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "summary",
+              "value": "Mocked defect analysis completed"
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "checkDefect",
+      "name": "Check Defect Level",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [600, 150],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.defectProbability }}",
+              "operation": "larger",
+              "value2": 0.5
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "logDefect",
+      "name": "Log Defect Alert",
+      "type": "n8n-nodes-base.set",
+      "position": [850, 50],
+      "typeVersion": 1,
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "DEFECT DETECTED – alert raised"
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "maintenanceSet",
+      "name": "Predictive Maintenance Agent (Mock)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [350, 450],
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "temperature",
+              "value": "={{ 60 + Math.random() * 20 }}"
+            },
+            {
+              "name": "vibration",
+              "value": "={{ 1 + Math.random() * 5 }}"
+            },
+            {
+              "name": "failureRisk",
+              "value": "={{ Math.random() }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "summary",
+              "value": "Mock predictive maintenance results"
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "checkMachine",
+      "name": "Check Machine Health",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [600, 450],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.failureRisk }}",
+              "operation": "larger",
+              "value2": 0.6
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "createMaintenance",
+      "name": "Create Maintenance Ticket (Mock)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [850, 350],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "ticket",
+              "value": "Maintenance ticket issued"
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "productionSchedule",
+      "name": "Production Scheduling Agent (Mock)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [850, 550],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "schedule",
+              "value": "Production schedule optimized"
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "report",
+      "name": "Send Management Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1100, 300],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "report",
+              "value": "Full simulation completed successfully"
+            }
+          ]
+        }
+      }
+    }
+  ],
+
+  "connections": {
+    "trigger": {
+      "main": [
+        [
+          { "node": "Quality Inspection Agent (Mock)", "type": "main", "index": 0 },
+          { "node": "Predictive Maintenance Agent (Mock)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+
+    "Quality Inspection Agent (Mock)": {
+      "main": [
+        [
+          { "node": "Check Defect Level", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+
+    "Check Defect Level": {
+      "main": [
+        [
+          { "node": "Log Defect Alert", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Send Management Report", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+
+    "Predictive Maintenance Agent (Mock)": {
+      "main": [
+        [
+          { "node": "Check Machine Health", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+
+    "Check Machine Health": {
+      "main": [
+        [
+          { "node": "Create Maintenance Ticket (Mock)", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Production Scheduling Agent (Mock)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+
+    "Create Maintenance Ticket (Mock)": {
+      "main": [
+        [
+          { "node": "Send Management Report", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+
+    "Production Scheduling Agent (Mock)": {
+      "main": [
+        [
+          { "node": "Send Management Report", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  }
+}
+
